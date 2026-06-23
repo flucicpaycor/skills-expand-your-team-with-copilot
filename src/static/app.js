@@ -611,7 +611,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Build share content
-    const shareText = `Check out "${name}" at Mergington High School! ${details.description} Schedule: ${formattedSchedule}`;
+    const shortDesc = details.description.length > 100
+      ? details.description.slice(0, 97) + "..."
+      : details.description;
+    const shareText = `Check out "${name}" at Mergington High School! ${shortDesc}`;
     const shareUrl = `${window.location.origin}${window.location.pathname}?activity=${encodeURIComponent(name)}`;
 
     activityCard.querySelector(".share-twitter").href =
@@ -625,6 +628,12 @@ document.addEventListener("DOMContentLoaded", () => {
       navigator.clipboard.writeText(shareUrl).then(() => {
         const copyBtn = activityCard.querySelector(".share-copy");
         copyBtn.textContent = "✅ Copied!";
+        setTimeout(() => {
+          copyBtn.textContent = "📋 Copy Link";
+        }, 2000);
+      }).catch(() => {
+        const copyBtn = activityCard.querySelector(".share-copy");
+        copyBtn.textContent = "❌ Copy failed";
         setTimeout(() => {
           copyBtn.textContent = "📋 Copy Link";
         }, 2000);
